@@ -1,4 +1,4 @@
-services:
+ services:
   app:
     build:
       context: .
@@ -8,7 +8,8 @@ services:
       - ./:/var/www
       - ./vendor:/var/www/vendor
     networks:
-      - laravel-network
+      laravel-network:
+        ipv4_address: 192.168.10.10
 
   webserver:
     image: nginx:latest
@@ -21,7 +22,8 @@ services:
     depends_on:
       - app
     networks:
-      - laravel-network
+      laravel-network:
+        ipv4_address: 192.168.10.20
 
   db:
     image: mysql:5.7
@@ -32,7 +34,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - laravel-network
+      laravel-network:
+        ipv4_address: 192.168.10.30
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -45,10 +48,15 @@ services:
     depends_on:
       - db
     networks:
-      - laravel-network
+      laravel-network:
+        ipv4_address: 192.168.10.40
 
 volumes:
   db_data:
 
 networks:
   laravel-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24 
