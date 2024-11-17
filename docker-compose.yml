@@ -1,24 +1,12 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    image: laravel-app
     container_name: laravel-app
     volumes:
-      - .:/var/www
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - APP_KEY=base64:YOUR_APP_KEY
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=laravel
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
+      - ./:/var/www
+      - ./vendor:/var/www/vendor
     networks:
       - laravel-network
 
@@ -26,10 +14,10 @@ services:
     image: nginx:latest
     container_name: nginx-webserver
     ports:
-      - "8000:80"
+      - "8123:80"
     volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - .:/var/www
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
     networks:
@@ -40,9 +28,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "3307:3307"
+      MYSQL_ROOT_PASSWORD: xtPi7LlpHO7wYoCqYjBf99w5SZW
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -53,9 +39,9 @@ services:
     container_name: phpmyadmin
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: xtPi7LlpHO7wYoCqYjBf99w5SZW
     ports:
-      - "8080:80"
+      - "9123:80"
     depends_on:
       - db
     networks:
